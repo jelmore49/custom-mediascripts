@@ -273,7 +273,7 @@ function ftpUpload() {
     }
 
 /*
- * We process the input-path parameters to the MRL request in order to build
+ * We collect the input-path parameters to the MRL request in order to build
  * an array of file paths. We do this in a while loop because
  * we don't know how many paths are being passed.
  */
@@ -289,7 +289,7 @@ function ftpUpload() {
 
 /*
  * Media.InternalToExternal() is a custom MediaRich function.
- * We use it to translates a path from Portfolio Server into a path that
+ * We use it to translate a path from Portfolio Server into a path that
  * MediaRich can use. It's a class method of Media, so we create an anonymous
  * Media object to call the function from. After that, we push the file path
  * into fileStats.
