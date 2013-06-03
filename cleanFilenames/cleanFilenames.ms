@@ -1,11 +1,35 @@
 /*jslint sloppy: true, undef: false, vars: true, white: true */
 /*global File, Media, req, System */
 
-/* cleanFilenames.ms
- * By Jay Elmore
- * This is a reworking of the cleanFilenames.ms from an early build of the ICS Toolkit
- * NOTE: I use the JavaScript object notation instead of the MediaScript @ notation, so that my JS editor doesn't complain
+/**
+ * cleanFilenames.ms
+ * @author Jay Elmore
+ *
+ * To make the script available to Portfolio Server, place cleanFilenames.ms
+ * in the Scripts folder:
+ * /Applications/Extensis/Portfolio Server/applications/media-engine/Shared/Originals/Scripts/ (Mac OS X)
+ * C:\Program Files\Extensis\Portfolio Server\applications\media-engine\Shared\Originals\Scripts\ (Windows 32-bit)
+ * C:\Program Files (x86)\Extensis\Portfolio Server\applications\media-engine\Shared\Originals\Scripts\ (Windows 32-bit)
+ *
+ * Then, add this XML fragment to media-scripts.xml before the </media-scripts>
+ * tag at the end and restart Portfolio Server:
+ *
+ * <media-script input-style="once-per-file" file-output="">
+ *     <name>Clean Filenames</name>
+ *     <file>cleanFilenames.ms</file>
+ *     <function>cleanFilenames</function>
+ * </media-script>
+ *
+ * media-scripts.xml is found in:
+ * /Applications/Extensis/Portfolio Server/data/ (Mac OS X)
+ * C:\Program Files\Extensis\Portfolio Server\data\ (Windows 32-bit)
+ * C:\Program Files (x86)\Extensis\Portfolio Server\data\ (Windows 32-bit)
+ *
+ * I use the JavaScript object notation instead of the MediaScript
+ * "@" notation for named parameters so that my editor doesn't complain as much.
+ * See page 49 of the MediaRich CORE Programming Guide for details.
  */
+
 #include "sys:/TextResponse.ms"
 
 var kNameHeader = 'Portfolio-Output-Filename',
@@ -77,9 +101,9 @@ function normalizeExtension(ext) {
 		'targa': 'tga'
 	};
 	if (extensionMap[ext]) {
-		return extensionMap[ext];
+		return extensionMap[ext].toLowerCase();
 	} else {
-		return ext;
+		return ext.toLowerCase();
 	}
 }
 
@@ -104,7 +128,7 @@ function cleanFilenames() {
 		fileExtension = f.getFileExtension();
 
 		if (normExtFlag) {
-			fileExtension = normalizeExtension(fileExtension.toLowerCase());
+			fileExtension = normalizeExtension(fileExtension);
 		}
 		if (stripBadFlag) {
 			fileName = fileName.replace(/[\/<>?:*|]/g, '').replace(/[.\s]/g, '_');

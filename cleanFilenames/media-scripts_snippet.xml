@@ -1,5 +1,0 @@
-<media-script input-style="once-per-file" file-output="">
-    <name>Clean Filenames</name>
-    <file>cleanFilenames.ms</file>
-    <function>cleanFilenames</function>
-</media-script>
