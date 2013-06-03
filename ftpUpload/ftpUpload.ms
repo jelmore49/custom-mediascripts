@@ -212,13 +212,13 @@ function ftpUpload() {
  * the MediaRich request 
  * "externalPath" is the path that results from converting the internalPath
  * to a form that MediaRich can use.
- * "generatedPath" is the FTP path we will use to upload the file.
- * "pathForLog" is similar to generatedPath but we obfuscate the username
+ * "targetPath" is the FTP path we will use to upload the file.
+ * "pathForLog" is similar to targetPath but we obfuscate the username
  * and password to be used in the FTP path.
  */
         internalPath,
         externalPath,
-        generatedPath,
+        targetPath,
         pathForLog,
 
 /*
@@ -323,7 +323,7 @@ function ftpUpload() {
  * for the summary email).
  */
             } else {
-                generatedPath = buildFTPPath(ftp.serverName, ftp.port, ftp.username, ftp.password, ftp.folderPath, filename);
+                targetPath = buildFTPPath(ftp.serverName, ftp.port, ftp.username, ftp.password, ftp.folderPath, filename);
                 pathForLog = buildFTPPath(ftp.serverName, ftp.port, '*****', '*****', ftp.folderPath, filename);
 /*
  * We push the FTP path into fileStats
@@ -335,7 +335,7 @@ function ftpUpload() {
  * If we aren't going to overwrite existing files and the file exists, then we
  * push a message indicating this into fileStats and keep going.
  */
-                if (ftp.overwriteExisting && new File(generatedPath).exists()) {
+                if (ftp.overwriteExisting && new File(targetPath).exists()) {
                     fileStats.push('File ' + filename + ' exists and overwrite of existing files not allowed; file not uploaded');
                     log.info('File ' + filename + ' exists and overwrite of existing files not allowed; file not uploaded');
 
@@ -346,7 +346,7 @@ function ftpUpload() {
  * to emailBody.
  */
                 } else {
-                    file.copy(generatedPath);
+                    file.copy(targetPath);
                     fileStats.push('File ' + filename + ' uploaded');
                     log.debug('File ' + filename + ' uploaded');
                     if (global.sendSummaryEmail) {
@@ -381,7 +381,7 @@ function ftpUpload() {
     try {
         if (ftp.archiveAndUpload && myZip !== null) {
             log.debug('Uploading zip archive\n');
-            generatedPath = buildFTPPath(ftp.serverName, ftp.port, ftp.username, ftp.password, ftp.folderPath, ftp.zipFilename);
+            targetPath = buildFTPPath(ftp.serverName, ftp.port, ftp.username, ftp.password, ftp.folderPath, ftp.zipFilename);
             pathForLog = buildFTPPath(ftp.serverName, ftp.port, '*****', '*****', ftp.folderPath, ftp.zipFilename);
             fileStats.push('FTP Upload URL: ' + pathForLog);
             log.debug('FTP Upload URL: ' + pathForLog);
@@ -390,7 +390,7 @@ function ftpUpload() {
  * If we aren't going to overwrite existing files and the ZIP archive exists,
  * then we push a message indicating this into fileStats and keep going.
  */
-            if (ftp.overwriteExisting && new File(generatedPath).exists()) {
+            if (ftp.overwriteExisting && new File(targetPath).exists()) {
                 fileStats.push('File ' + ftp.zipFilename + ' exists and overwrite of existing files not allowed; file not uploaded');
                 log.info('File ' + ftp.zipFilename + ' exists and overwrite of existing files not allowed; file not uploaded');
 /*
@@ -400,7 +400,7 @@ function ftpUpload() {
  * to emailBody.
  */
             } else {
-                myZip.save(generatedPath);
+                myZip.save(targetPath);
                 fileStats.push('File ' + ftp.zipFilename + ' uploaded');
                 log.debug('File ' + ftp.zipFilename + ' uploaded');
                 if (global.sendSummaryEmail) {
