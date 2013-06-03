@@ -208,16 +208,16 @@ function ftpUpload() {
         fileStats = ['=====Uploaded File Statistics====='],
 
 /*
- * "paramPath" is the path that is pulled from the "input-path-" parameter of
+ * "internalPath" is the path that is pulled from the "input-path-" parameter of
  * the MediaRich request 
- * "localPath" is the path that results from converting the paramPath
+ * "externalPath" is the path that results from converting the internalPath
  * to a form that MediaRich can use.
  * "generatedPath" is the FTP path we will use to upload the file.
  * "pathForLog" is similar to generatedPath but we obfuscate the username
  * and password to be used in the FTP path.
  */
-        paramPath,
-        localPath,
+        internalPath,
+        externalPath,
         generatedPath,
         pathForLog,
 
@@ -279,11 +279,11 @@ function ftpUpload() {
  */
     while (true) {
         try {
-            paramPath = req.getParameter('input-path-' + pathidx);
+            internalPath = req.getParameter('input-path-' + pathidx);
 /*
  * The first time we get an invalid parameter, we break out of the loop.
  */
-            if (!paramPath) {
+            if (!internalPath) {
                 break;
             }
 
@@ -294,20 +294,20 @@ function ftpUpload() {
  * Media object to call the function from. After that, we push the file path
  * into fileStats.
  */
-            log.debug('input-path-' + pathidx + ': ' + paramPath);
-            localPath = 'file:' + new Media().InternalToExternal({internal: paramPath});
-            log.debug('Source file path: ' + localPath);
-            fileStats.push('Source file path: ' + localPath);
+            log.debug('input-path-' + pathidx + ': ' + internalPath);
+            externalPath = 'file:' + new Media().InternalToExternal({internal: internalPath});
+            log.debug('Source file path: ' + externalPath);
+            fileStats.push('Source file path: ' + externalPath);
 
 /*
- * We create a File object using the localPath, and put the filename in filename
+ * We create a File object using the externalPath, and put the filename in filename
  * and the file size in fileSize for reporting purposes. File.getSize() returns
  * the file size in bytes, so we convert to kilobytes, then multiply by 10,000,
  * round down, then divide by 10,000 to get a pretty number for the report.
  * We then push the file size into fileStats.
  */
             // Get the file size
-            file = new File(localPath);
+            file = new File(externalPath);
             filename = file.getFileName();
             fileSize = Math.round((file.getSize() / 1024) * 10000) / 100000;
             log.debug('Source file size : ' + fileSize.toFixed(1) + ' MB');
@@ -317,7 +317,7 @@ function ftpUpload() {
  */
             if (ftp.archiveAndUpload) {
                 log.debug('Adding ' + filename + ' to zip archive');
-                myZip.addFile(localPath, filename);
+                myZip.addFile(externalPath, filename);
 /*
  * Otherwise, then we generate the FTP path for the file (and an obfuscated path
  * for the summary email).
