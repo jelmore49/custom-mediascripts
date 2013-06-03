@@ -1,0 +1,7 @@
+<media-script input-style="once-for-all-files" file-output="" source="original" stream-source="false">
+    <name>Upload Files to FTP Server</name>
+    <file>ftpUpload.ms</file>
+    <function>ftpUpload</function>
+    <metadata>true</metadata>
+    <language>en</language>
+</media-script>
